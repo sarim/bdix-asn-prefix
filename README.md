@@ -15,3 +15,9 @@ Ex:
 ```sh
 xargs -I {} echo iptables -A bdix-filter -s {} < prefix.txt
 ```
+
+```sh
+#/ip firewall address-list
+xargs -I {} echo add address={} list=bdix < prefix.txt
+```
+
