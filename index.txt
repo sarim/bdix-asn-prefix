@@ -1,0 +1,17 @@
+AS17469	Access Telecom (BD) Ltd.
+AS23893	Bangla Phone Ltd
+AS24050	Internet Systems Consortium, Inc.
+AS26415	VeriSign Global Registry Services
+AS38067	Radiant Communications Limited
+AS38200	BTS Communications (BD) ltd,
+AS38592	Chittagong Online Limited AS38592 AP
+AS38712	Telnet Communication Limited
+AS45766	Triangle Services Limited.
+AS58599	Cybergate Limited
+AS58601	Aamra technologies limited
+AS58689	ICC Communication
+AS58717	Summit Communications Ltd
+AS59347	Aalok IT Limited
+AS133854	X-press Technologies Limited.
+AS134732	Dot Internet
+AS134813	Cyber Communication Bangladesh

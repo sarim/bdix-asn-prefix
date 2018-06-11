@@ -1,0 +1,339 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="content-language" content="en" />
+    <meta name="robots" content="all,follow" />
+
+    <meta name="description" content="Live BGP routing table lookup, showing prefixes announced by an autonomous system." />
+    <meta name="keywords" content="live, bgp table, routing table, ip prefix, ip prefixes, autonomous system, asn" />
+    <meta name="google-site-verification" content="qF5i3VVdrvIh5_2rs2HlKKldCkFCUxy_5NU4HkIrnKk" />
+    <meta name="verify-v1" content="pLzepI5wJqd2eVwA1erY7r57G8HdV8Nczr74vKORIHw=" />
+
+    <link rel="stylesheet" media="screen,projection" type="text/css" href="/css/reset.css" />
+    <link rel="stylesheet" media="screen,projection" type="text/css" href="/css/switcher.css" />
+    <!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="/css/main-msie.css" /><![endif]-->
+    <link rel="stylesheet" media="print" type="text/css" href="/css/print.css" />
+
+    <style type="text/css">
+	.logo-image { position: absolute; left: 20px; width: 500px; height: 75px; }
+
+	#loginbox {
+		background-color: transparent;
+		position: absolute;
+		top: 225px;
+		left: 50%;
+		margin-left: -235px;
+		height: 150px;
+		width: 470px;
+		text-align: center;
+		overflow: hidden;
+		visibility: hidden;
+		z-index: 255;
+	}
+	#twofabox {
+		background-color: transparent;
+		position: absolute;
+		top: 225px;
+		left: 50%;
+		margin-left: -235px;
+		height: 150px;
+		width: 470px;
+		text-align: center;
+		overflow: hidden;
+		visibility: hidden;
+		z-index: 255;
+	}
+    </style>
+
+    <script type="text/javascript" src="/js/switcher.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.cycle.all.js"></script>
+    <link rel="stylesheet" media="screen,projection" type="text/css" href="/08/css/style.css" title="08" />
+    <link rel="alternate stylesheet" media="screen,projection" type="text/css" href="/01/css/style.css" title="01" />
+    <link rel="alternate stylesheet" media="screen,projection" type="text/css" href="/02/css/style.css" title="02" />
+    <link rel="alternate stylesheet" media="screen,projection" type="text/css" href="/03/css/style.css" title="03" />
+    <link rel="alternate stylesheet" media="screen,projection" type="text/css" href="/04/css/style.css" title="04" />
+    <link rel="alternate stylesheet" media="screen,projection" type="text/css" href="/05/css/style.css" title="05" />
+    <link rel="alternate stylesheet" media="screen,projection" type="text/css" href="/06/css/style.css" title="06" />
+    <link rel="alternate stylesheet" media="screen,projection" type="text/css" href="/07/css/style.css" title="07" />
+    <link rel="alternate stylesheet" media="screen,projection" type="text/css" href="/08/css/style.css" title="08" />
+
+    <title>BGP Table Lookup Tool</title>
+
+    <script type="text/javascript">
+	$(document).ready(function() {
+		$('.logo-image').cycle({
+			fx: 'fade',
+			timeout: 4000,
+			speed: 1500
+		});
+	});
+
+	login_box_id = '';
+
+	function toggleLoginBox()
+	{
+		if (login_box_id == "")
+		{
+			var NNtype='show';
+			var IEtype='visible';
+			var WC3type='visible';
+			login_box_id = "1";
+		} else {
+			var NNtype='hidden';
+			var IEtype='hidden';
+			var WC3type='hidden';
+			login_box_id = "";
+		}
+		if (document.getElementById)
+		{
+			eval("document.getElementById('loginbox').style.visibility=\""+WC3type+"\"");
+		} else {
+			if (document.layers)
+			{
+				document.layers['loginbox'].visibility=NNtype;
+			} else {
+				if (document.all)
+				{
+					eval("document.all.loginbox.style.visibility=\""+IEtype+"\"");
+				}
+			}
+		}
+	}
+    </script>
+</head>
+
+<body>
+<div>
+<span style="color: #ff0000; background: #000000; text-align: right; font-weight: bold; font-size: 12pt; position: fixed; top: 0px; right: 0px; z-index: 10; "> &nbsp; 256-bit SSL HTTP/2.0 IPv4 &nbsp; </span>
+</div>
+<div id="main">
+    <div id="header">
+        <div class="logo-image">
+            <a href="http://dan.cm/"><img src="/images/dancm.png" width="500" height="75" alt="dan.cm [cameroon]" /></a>
+            <a href="http://dan.is/"><img src="/images/danis.png" width="500" height="75" alt="dan.is [iceland]" /></a>
+            <a href="http://dan.lc/"><img src="/images/danlc.png" width="500" height="75" alt="dan.lc [saint lucia]" /></a>
+            <a href="http://dan.me.uk/"><img src="/images/danmeuk.png" width="500" height="75" alt="dan.me.uk [united kingdom]" /></a>
+            <a href="http://dan.tm/"><img src="/images/dantm.png" width="500" height="75" alt="dan.tm [turkmenistan]" /></a>
+            <a href="http://dan.xxx/"><img src="/images/danxxx.png" width="500" height="75" alt="dan.xxx" /></a>
+            <a href="http://dan.tv/"><img src="/images/dantv.png" width="500" height="75" alt="dan.tv [tuvalu]" /></a>
+            <a href="http://dan.gs/"><img src="/images/dangs.png" width="500" height="75" alt="dan.gs [south georgia and the south sandwich isles]" /></a>
+	</div>
+        <hr class="noscreen" />          
+        <p id="switcher">
+            <a href="#" onclick="setActiveStyleSheet('06'); return false;"><img src="/images/06.gif" width="10" height="10" alt="" /></a>
+            <a href="#" onclick="setActiveStyleSheet('01'); return false;"><img src="/images/01.gif" width="10" height="10" alt="" /></a>
+            <a href="#" onclick="setActiveStyleSheet('08'); return false;"><img src="/images/08.gif" width="10" height="10" alt="" /></a>
+            <a href="#" onclick="setActiveStyleSheet('04'); return false;"><img src="/images/04.gif" width="10" height="10" alt="" /></a>
+            <a href="#" onclick="setActiveStyleSheet('02'); return false;"><img src="/images/02.gif" width="10" height="10" alt="" /></a>
+            <a href="#" onclick="setActiveStyleSheet('05'); return false;"><img src="/images/05.gif" width="10" height="10" alt="" /></a>
+            <a href="#" onclick="setActiveStyleSheet('07'); return false;"><img src="/images/07.gif" width="10" height="10" alt="" /></a>
+            <a href="#" onclick="setActiveStyleSheet('03'); return false;"><img src="/images/03.gif" width="10" height="10" alt="" /></a>
+        </p>
+    </div>
+    
+    <!-- Tray/top-bar -->
+    <div id="tray">
+        <ul class="box">
+		<li>You're connected from 103.102.43.120 (via AS137020: FCN-AS-AP from , BD) using a 256-bit SSL HTTP/2.0 IPv4 connection.</li>
+        </ul>
+    <hr class="noscreen" />
+    </div>
+
+    <div id="cols" class="box">
+        <div id="content">
+            <div id="content-left">
+                <div id="content-left-in">
+		<!-- end header -->
+
+				<h3 class="title">BGP Lookup Tool</h3>
+				<div class="article box">This will allow you to lookup a list of prefixes currently announced via BGP.<br />
+BGP is the current global routing table, and reflects how ISPs reach destination IPs.<br /><br />
+<form action="/bgplookup" method="get">
+<table>
+<tr>
+<td align="right" valign="top"><b>AS to Query:</b></td>
+<td align="left"><input type="text" name="asn" value="17469" maxlength="10" size="12" /> <input type="submit" value="Lookup!" /><br />
+<input type="checkbox" name="include_downstream" checked /> &nbsp; Include downstream prefixes</td>
+</tr>
+</table>
+</form>
+<b>IPv4 Prefixes seen at AS17469:</b><br /><br />
+<table border="0" cellspacing="0" cellpadding="0">
+<tr><td align="left"> &nbsp; 103.43.54.0/24 &nbsp; </td><td align="left"> &nbsp; [AS63890] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.0.0/16 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.0.0/17 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.124.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.125.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.126.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.128.0/17 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.140.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.141.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.142.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.143.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.144.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.160.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.165.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.166.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.167.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.168.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.175.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.176.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.177.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.178.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.179.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.180.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.181.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.183.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.184.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.186.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.187.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.188.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.190.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.194.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.195.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.197.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.198.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.199.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.32.0/20 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 175.29.48.0/20 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 202.161.176.0/20 &nbsp; </td><td align="left"> &nbsp; [AS38030] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 202.22.192.0/20 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 202.22.192.0/21 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 202.22.192.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 202.22.193.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 202.22.195.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 202.22.199.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 202.22.200.0/21 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 202.22.200.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 202.22.201.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 202.22.202.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 202.22.203.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 202.65.10.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17641] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.169.29.0/24 &nbsp; </td><td align="left"> &nbsp; [AS38315] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.169.30.0/24 &nbsp; </td><td align="left"> &nbsp; [AS38315] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.76.144.0/20 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.76.144.0/21 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.76.145.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.76.147.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.76.149.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.76.150.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.76.151.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.76.156.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.76.159.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.82.192.0/21 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.82.192.0/22 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.82.193.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.82.194.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.82.195.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.82.196.0/22 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.82.196.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.82.197.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.82.198.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.82.199.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.82.200.0/21 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.82.200.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.82.202.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.82.203.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.82.204.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.82.206.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+<tr><td align="left"> &nbsp; 203.82.207.0/24 &nbsp; </td><td align="left"> &nbsp; [AS17469] &nbsp; </td></tr>
+</table>
+<br />
+<b>78 prefixes found.</b><br />
+<br />
+				</div>
+
+		<!-- start footer -->
+                </div>
+            </div>
+        </div>
+
+        <div id="aside">
+            <div id="aside-top"></div>
+            <div class="padding">
+                <h4 class="nom">Navigation</h4>
+            </div>
+            
+            <ul class="nav">
+<li><a href="/">Index</a></li>
+<li>
+<a href="javascript:toggleLoginBox();">Login</a></li>
+<li><a href="/about">About Me (Dan)</a></li>
+<li><a href="/2e0nnx">Amateur Radio 2E0NNX</a></li>
+<li id="nav-active"><a href="/bgplookup">BGP Lookup Tool</a></li>
+<li><a href="/blog/">Blog (Tech Hints &amp; Tips)</a></li>
+<li><a href="/dnsbl">DNS Blacklists (dnsbl)</a></li>
+<li><a href="/dnsinfo">DNS Server Info</a></li>
+<li><a href="/donate">Donations</a></li>
+<li><a href="/filtergen">Filter List Generator</a></li>
+<li><a href="/ipinfo">IP Information Tool</a></li>
+<li><a href="/ipsubnets">IP Subnet Calculator</a></li>
+<li><a href="/serverinfo">Local Server Information</a></li>
+<li><a href="/keygen">Password Tool</a></li>
+<li><a href="/media/" rel="external">Picture Gallery</a></li>
+<li><a href="/tornodes">Tor Node List</a></li>
+<li><a href="https://mail.dan.me.uk/" rel="external">Webmail Access</a></li>
+<li><a href="/websiteinfo">Website Info Tool</a></li>
+            </ul>
+                
+	</div>
+        <div id="aside-bottom"></div>
+    </div>
+
+    <div id="footer">
+        <p class="f-right">
+	<a href="http://validator.w3.org/check?uri=https%3A%2F%2Fwww.dan.me.uk%2Fbgplookup%3Fasn%3D17469%26include_downstream%3Don"><img src="/images/valid-xhtml10.png" width="88" height="31" alt="Valid XHTML 1.0 Strict" /></a> &nbsp; &nbsp; 
+	<a href="http://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fwww.dan.me.uk%2Fbgplookup%3Fasn%3D17469%26include_downstream%3Don"><img src="/images/vcss.gif" width="88" height="31" alt="Valid CSS!" /></a>
+	<img src="/images/powered-by.gif" width="171" height="64" alt="Powered by FreeBSD" />
+	</p>
+        <p>Copyright &copy;&nbsp;0b11111100010<br /><strong><a href="./about">Daniel Austin MBCS</a></strong><br /><br />All Rights Reserved &reg;</p>
+    </div>
+</div>
+
+<div id="loginbox">
+	<form action="./" method="post">
+	<div id="topstory-top"></div>
+	<div id="topstory" class="box" style="text-align: left;">
+		<table>
+			<tr>
+				<td><input type="hidden" name="action" value="login" />
+					<b>Username: &nbsp; </b></td>
+				<td> &nbsp; <input type="text" name="login_user" maxlength="16" value="" /></td>
+			</tr>
+			<tr>
+				<td><b>Password: &nbsp; </b></td>
+				<td> &nbsp; <input type="password" name="login_pass" maxlength="128" value="" /></td>
+			</tr>
+		</table>
+	</div>
+	<div id="topstory-list" class="box">
+		<p class="nom"><input type="submit" name="login" value="Login" /></p>
+	</div>
+	<div id="topstory-bottom"></div>
+	</form>
+</div>
+<div id="twofabox">
+	<form action="./" method="post">
+	<div id="topstory2-top"></div>
+	<div id="topstory2" class="box" style="text-align: left;">
+		<table>
+			<tr>
+				<td colspan="2"><b>Two-Factor Authentication Required</b><br />
+Please enter the code from your Google Authenticator Mobile App/Plugin:</td>
+			</tr>
+			<tr>
+				<td style="text-align: center;" colspan="2"><input type="hidden" name="login_request" value="" /><input type="hidden" name="action" value="2falogin" />
+				<input type="text" name="login_token" maxlength="16" value="" /></td>
+			</tr>
+		</table>
+	</div>
+	<div id="topstory2-list" class="box">
+		<p class="nom"><input type="submit" name="login" value="Login" /></p>
+	</div>
+	<div id="topstory2-bottom"></div>
+	</form>
+</div>
+</body>
+</html>
